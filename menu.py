@@ -47,8 +47,11 @@ class Menu:
         length = len(self.options)
         while True:
             key = self.window.getch()
-            if key == curses.KEY_UP and self.select > 0:
-                self.select -= 1  # noqa: E701
+            if key == curses.KEY_UP:
+                if self.select == 0:
+                    self.select = length - 1
+                else:
+                    self.select -= 1  # noqa: E701
             elif key == curses.KEY_DOWN and self.select < length - 1:
                 self.select += 1  # noqa: E701
             elif key in [10, 13, 32, curses.KEY_ENTER]:
