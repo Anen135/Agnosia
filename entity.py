@@ -19,22 +19,21 @@ class Player:
         self.settings = {
             "music": True,
         }
-        
 
     def move(self):
         self.position = [self.position[0] + self.direction[0], self.position[1] + self.direction[1]]
-    
+
     def turn(self, side=None):
-        #[1,-1] - RIGHT, [-1,1] - LEFT
+        # [1,-1] - RIGHT, [-1,1] - LEFT
         if side is None:
-            side = [1,-1]
+            side = [1, -1]
         self.swap()
         self.direction = side[0] * self.direction[0], side[1] * self.direction[1]
-            
+
     def look_forward(self):
         return self.position[0] + self.direction[0], self.position[1] + self.direction[1]
-    
-    def look_around(self): # Returns a list of all possible player movements
+
+    def look_around(self):  # Returns a list of all possible player movements
         return [self.position[0] + self.direction[0],
                 self.position[1] + self.direction[1],
                 self.position[0] + self.direction[1],
@@ -42,10 +41,10 @@ class Player:
                 self.position[0] - self.direction[1],
                 self.position[1] + self.direction[0],
                 self.position[0] - self.direction[0],
-                self.position[1] - self.direction[1]]      
-    
+                self.position[1] - self.direction[1]]
+
     def turn_back(self):
         self.direction = [-self.direction[0], -self.direction[1]]
-    
+
     def swap(self):
         self.direction = [self.direction[1], self.direction[0]]

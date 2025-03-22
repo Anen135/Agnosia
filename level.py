@@ -1,4 +1,6 @@
 from maze import Maze
+
+
 class Level:
     def __init__(self, name, maze, description="No description", monster=None, dificulty=0, timelimit=0, config=None):
         if config is None:
