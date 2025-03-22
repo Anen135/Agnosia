@@ -36,7 +36,8 @@ class Game:
         curses.curs_set(1)
 
     # settings
-    def colorset(self):
+    @staticmethod
+    def colorset():
         curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
         curses.init_pair(2, curses.COLOR_BLUE, curses.COLOR_BLACK)
         curses.init_pair(3, curses.COLOR_GREEN, curses.COLOR_BLACK)
@@ -123,7 +124,7 @@ class Game:
         self.game_menu.content += self.message
         self.message = ""
         self.game_menu.display()
-        if (self.level["timelimit"] != 0):
+        if self.level["timelimit"] != 0:
             self._display_game_info()
 
     def _display_game_info(self):
@@ -206,8 +207,9 @@ class Game:
         self.stdscr.addstr(string, attr)
         self.stdscr.refresh()
 
-        # Player actions
+    # Player actions
 
+    @staticmethod
     def wait(func):
         def wrapper(self, *args, **kwargs):
             func(self, *args, **kwargs)
