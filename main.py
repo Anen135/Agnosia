@@ -21,7 +21,7 @@ TITLE = """
 
 
 class Game:
-    def __init__(self, stdscr):
+    def __init__(self, stdscr: curses.window):
         self.music_mode = False
         self.game_on = False
         self.stdscr = stdscr
@@ -42,14 +42,15 @@ class Game:
         curses.init_pair(2, curses.COLOR_BLUE, curses.COLOR_BLACK)
         curses.init_pair(3, curses.COLOR_GREEN, curses.COLOR_BLACK)
 
-    def background_music(self, path):
-        # 0     - PLAYANDSTOP               # 1     - ASYNC
-        # 2     - NODEFULT                  # 4     - MEMORY                    
-        # 8     - LOOP                      # 9     - ON (1 + 8)                
-        # 16    - NOSTOP                    # 64    - PURGE (not supported)     
-        # 128   - NOWAIT (not supported)    # 65536 - ALIAS                     
+    def background_music(self, path, flag=9):
+        """flags:
+        0     - PLAYANDSTOP               1     - ASYNC
+           2     - NODEFULT                  4     - MEMORY
+           8     - LOOP                      9     - ON (1 + 8)
+           16    - NOSTOP                    64    - PURGE (not supported)
+           128   - NOWAIT (not supported)    65536 - ALIAS """
         if self.music_mode:
-            PlaySound(BASEDIR + path, 9)
+            PlaySound(BASEDIR + path, flag)
 
     @staticmethod
     def load_level(number):
@@ -202,7 +203,7 @@ class Game:
 
         # Curses methods
 
-    def print(self, string, attr=0):
+    def print(self, string: str, attr=0):
         string = str(string)
         self.stdscr.addstr(string, attr)
         self.stdscr.refresh()
@@ -332,7 +333,7 @@ class Game:
         return message
 
 
-def main(stdscr):
+def main(stdscr: curses.window):
     game = Game(stdscr)
     game.main_loop()
 

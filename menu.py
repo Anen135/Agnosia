@@ -4,7 +4,7 @@ import curses
 class Menu:
     stdscr = None
 
-    def __init__(self, options, title=None, stdscr=None, height=None, width=None, start_y=0, start_x=0, content=None):
+    def __init__(self, options, title=None, stdscr: curses.window = None, height=None, width=None, start_y=0, start_x=0, content=None):
         self.select = 0
         self.options = options
         self.title = title
