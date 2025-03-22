@@ -1,0 +1,11 @@
+{
+    "name": "First level",
+    "description": "level one",
+    "maze": {
+        "rows": 11,
+        "cols": 21
+    },
+    "monster": null,
+    "dificulty": 0,
+    "timelimit": 50
+}

@@ -1,0 +1,11 @@
+{
+    "name": "l0",
+    "description": "Tutorial level",
+    "maze": {
+        "cols": 21,
+        "rows": 11
+    },
+    "monster": null,
+    "dificulty": 0,
+    "timelimit": 0
+}
