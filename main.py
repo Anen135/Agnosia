@@ -33,7 +33,7 @@ class Game:
         self.levels_menu = Menu(self.get_level_names(BASEDIR + "\\levels"), title="LEVELS\n", start_x=10, start_y=10)
         self.message = ""
         self.colorset()
-        curses.curs_set(1)
+        curses.curs_set(0)
 
     # settings
     @staticmethod
