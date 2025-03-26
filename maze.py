@@ -4,32 +4,34 @@ import random
 class Maze:
     def __init__(self, rows, cols, config=None):
         if config is None:
-            config = {"wall": "#", "path": " ", "start": "S", "end": "E"}
+            config = {"wall": "█", "path": " ", "start": "S", "end": "E"}
         self.rows = rows
         self.cols = cols
         self.config = config
         self.maze = self.generate_maze(rows, cols)
 
     def generate_maze(self, rows, cols):
-        maze = [[self.config["wall"] for _ in range(cols)] for _ in range(rows)]
+        maze = [[self.config['wall'] for _ in range(rows)] for _ in range(cols)]
+        directions = [(0, -2), (0, 2), (-2, 0), (2, 0)]
 
-        def is_valid_move(row, col):
-            return 0 <= row < rows and 0 <= col < cols and maze[row][col] == self.config["wall"]
+        stack = [(1, 1)]  # Начальная точка
+        maze[1][1] = self.config['start']  # Открываем стартовую клетку
 
-        def generate_path(row, col):
-            directions = [(0, -1), (0, 1), (-1, 0), (1, 0)]
-            random.shuffle(directions)
-            for drow, dcol in directions:
-                new_row, new_col = row + 2 * drow, col + 2 * dcol
-                if is_valid_move(new_row, new_col):
-                    maze[row + drow][col + dcol] = self.config["path"]
-                    maze[new_row][new_col] = self.config["path"]
-                    generate_path(new_row, new_col)
+        while stack:
+            x, y = stack[-1]  # Берём последний элемент из стека
+            random.shuffle(directions)  # Перемешиваем направления
 
-        start_row, start_col = 1, 1
-        maze[start_row][start_col] = self.config["start"]  # Вход
-        generate_path(start_row, start_col)
-        maze[rows - 2][cols - 1] = self.config["end"]  # Выход
+            for dx, dy in directions:
+                nx, ny = x + dx, y + dy  # Новая позиция
+                if 0 < nx < self.cols - 1 and 0 < ny < self.rows - 1 and maze[ny][nx] == self.config['wall']:
+                    # Убираем стену между текущей и следующей ячейкой
+                    maze[y + dy // 2][x + dx // 2] = self.config['path']
+                    maze[ny][nx] = self.config['path']
+                    stack.append((nx, ny))
+                    break
+            else:
+                stack.pop()  # Если нет доступных направлений, удаляем из стека
+        maze[rows - 2][cols - 1] = self.config['end']
         return maze
 
     def get_object_position(self, object):
@@ -47,6 +49,5 @@ class Maze:
 
 
 if __name__ == '__main__':
-    maze = Maze(11, 21)
+    maze = Maze(999, 999)
     maze.display()
-
