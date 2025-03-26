@@ -44,3 +44,9 @@ class Maze:
 
     def is_end(self, position):
         return self.maze[position[0]][position[1]] == self.config["end"]
+
+
+if __name__ == '__main__':
+    maze = Maze(11, 21)
+    maze.display()
+
