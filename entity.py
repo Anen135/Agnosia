@@ -1,3 +1,17 @@
+
+class Entity:
+    def __init__(self, position=None, direction=None):
+        if position is None:
+            position = [1, 1]
+        if direction is None:
+            direction = [1, 0]
+        self.position = position
+        self.direction = direction
+        self.sign = None
+        self.name = ''
+
+
+
 class Player:
     def __init__(self, position=None, direction=None):
         if position is None:
