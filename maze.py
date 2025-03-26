@@ -11,7 +11,7 @@ class Maze:
         self.maze = self.generate_maze(rows, cols)
 
     def generate_maze(self, rows, cols):
-        maze = [[self.config['wall'] for _ in range(rows)] for _ in range(cols)]
+        maze = [[self.config['wall'] for _ in range(cols)] for _ in range(rows)]
         directions = [(0, -2), (0, 2), (-2, 0), (2, 0)]
 
         stack = [(1, 1)]  # Начальная точка
@@ -23,7 +23,7 @@ class Maze:
 
             for dx, dy in directions:
                 nx, ny = x + dx, y + dy  # Новая позиция
-                if 0 < nx < self.cols - 1 and 0 < ny < self.rows - 1 and maze[ny][nx] == self.config['wall']:
+                if 0 < nx < cols - 1 and 0 < ny < rows - 1 and maze[ny][nx] == self.config['wall']:
                     # Убираем стену между текущей и следующей ячейкой
                     maze[y + dy // 2][x + dx // 2] = self.config['path']
                     maze[ny][nx] = self.config['path']
@@ -49,5 +49,5 @@ class Maze:
 
 
 if __name__ == '__main__':
-    maze = Maze(999, 999)
+    maze = Maze(11, 21)
     maze.display()
