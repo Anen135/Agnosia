@@ -4,7 +4,7 @@ import random
 class Maze:
     def __init__(self, rows, cols, config=None):
         if config is None:
-            config = {"wall": "█", "path": " ", "start": "S", "end": "E"}
+            config = {"wall": "#", "path": " ", "start": "S", "end": "E"}
         self.rows = rows
         self.cols = cols
         self.config = config
