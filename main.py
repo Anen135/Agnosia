@@ -44,11 +44,11 @@ class Game:
 
     def background_music(self, path, flag=9):
         """flags:
-        0     - PLAYANDSTOP               1     - ASYNC
-           2     - NODEFULT                  4     - MEMORY
-           8     - LOOP                      9     - ON (1 + 8)
-           16    - NOSTOP                    64    - PURGE (not supported)
-           128   - NOWAIT (not supported)    65536 - ALIAS """
+            0     - PLAYANDSTOP               1     - ASYNC
+            2     - NODEFULT                  4     - MEMORY
+            8     - LOOP                      9     - ON (1 + 8)
+            16    - NOSTOP                    64    - PURGE (not supported)
+            128   - NOWAIT (not supported)    65536 - ALIAS """
         if self.music_mode:
             PlaySound(BASEDIR + path, flag)
 
@@ -122,6 +122,7 @@ class Game:
     def display_game(self):
         self.stdscr.clear()
         self.game_menu.content = self.whereWalls(self.player.look_around())
+        self.game_menu.content += self.touch_around(self.player.look_around())
         self.game_menu.content += self.message
         self.message = ""
         self.game_menu.display()
@@ -331,6 +332,10 @@ class Game:
         if to_sides[3] == self.config["wall"]:
             message += "There's a wall behind\n"
         return message
+
+    def touch_around(self, sides):
+        to_sides = [self.layer[sides[i]][sides[i + 1]] for i in range(0, len(sides), 2)]  # Returns the blocks around. 0 = front, 1 = right, 2 = left, 3 = back
+        return f"/{to_sides[0]}\\\n{to_sides[2]}o{to_sides[1]}\n\\{to_sides[3]}/\n"
 
 
 def main(stdscr: curses.window):
