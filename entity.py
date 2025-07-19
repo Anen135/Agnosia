@@ -22,7 +22,7 @@ class Player:
         self.position = position
         self.direction = direction
         self.inventory = {
-            "maps": 0,
+            "maps": 88,
             "compasses": 0,
             "scanners": 0,
             "locators": 0

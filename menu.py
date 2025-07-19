@@ -51,10 +51,14 @@ class Menu:
                 if self.select == 0:
                     self.select = length - 1
                 else:
-                    self.select -= 1  # noqa: E701
+                    self.select -= 1
             elif key == curses.KEY_DOWN and self.select < length - 1:
-                self.select += 1  # noqa: E701
+                self.select += 1
             elif key in [10, 13, 32, curses.KEY_ENTER]:
-                return self.select  # noqa: E701
-
+                return self.select
+            elif ord('0') <= key <= ord('9'):
+                index = key - ord('0') - 1
+                if 0 <= index < length:
+                    self.select = index
             self.display()
+

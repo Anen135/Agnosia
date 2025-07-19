@@ -244,8 +244,9 @@ class Game:
             # panel.box()
 
             buffer = maze[start_y:start_y + scroll_window_height, start_x:start_x + scroll_window_width]
+            buffer[self.player.position[0] - start_y][self.player.position[1] - start_x] = "O"
 
-            panel.addstr(0, 0, f"Scroll: {start_y} {start_x} {max_scroll_y} {max_scroll_x}")
+            panel.addstr(0, 0, f"Scroll: {start_y} {start_x} {max_scroll_y} {max_scroll_x} use q to exit")
 
             for y, row in enumerate(buffer):
                 for x, cell in enumerate(row):
@@ -334,8 +335,11 @@ class Game:
 
 
 def main(stdscr: curses.window):
-    game = Game(stdscr)
-    game.main_loop()
+    try:
+        game = Game(stdscr)
+        game.main_loop()
+    except Exception as e:
+        print(e)
 
 
 curses.wrapper(main)
