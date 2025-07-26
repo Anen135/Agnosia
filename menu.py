@@ -48,12 +48,9 @@ class Menu:
         while True:
             key = self.window.getch()
             if key == curses.KEY_UP:
-                if self.select == 0:
-                    self.select = length - 1
-                else:
-                    self.select -= 1
-            elif key == curses.KEY_DOWN and self.select < length - 1:
-                self.select += 1
+                self.select = (self.select - 1) % length
+            elif key == curses.KEY_DOWN:
+                self.select = (self.select + 1) % length
             elif key in [10, 13, 32, curses.KEY_ENTER]:
                 return self.select
             elif ord('0') <= key <= ord('9'):
@@ -61,4 +58,5 @@ class Menu:
                 if 0 <= index < length:
                     self.select = index
             self.display()
+
 
