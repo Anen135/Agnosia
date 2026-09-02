@@ -1,0 +1,19 @@
+[project]
+name = "agnosia"
+version = "0.1.0"
+description = "Curses-based maze escape game"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=2.0",
+]
+
+[project.scripts]
+agnosia = "main:main"
+
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["*"]

@@ -1,49 +1,63 @@
 import curses
+from typing import List, Optional
 
 
 class Menu:
-    stdscr = None
+    """A scrollable text menu rendered in a curses window."""
 
-    def __init__(self, options, title=None, stdscr: curses.window = None, height=None, width=None, start_y=0, start_x=0, content=None):
+    def __init__(
+        self,
+        options: List[str],
+        title: Optional[str] = None,
+        stdscr: Optional[curses.window] = None,
+        height: Optional[int] = None,
+        width: Optional[int] = None,
+        start_y: int = 0,
+        start_x: int = 0,
+        content: Optional[str] = None,
+    ):
         self.select = 0
-        self.options = options
+        self.options = list(options)
         self.title = title
         self.content = content
+        self.stdscr = stdscr
 
-        # Initialize stdscr or use the provided one
-        self.stdscr = stdscr or Menu.stdscr
-
-        # Calculate the height and width of the menu window
         self.height = height or (len(options) + 2 + (1 if title else 0))
-        self.width = width or max(len(option) for option in options) + 4
-        x, y = self.stdscr.getyx()
-        self.start_y = start_y or y
-        self.start_x = start_x or x
+        self.width = width or max((len(o) for o in options), default=10) + 4
 
-        # Create a new window for the menu
+        if stdscr is None:
+            raise ValueError("stdscr is required")
+
+        y, x = stdscr.getyx()
+        self.start_y = start_y if start_y is not None else y
+        self.start_x = start_x if start_x is not None else x
+
         self.window = curses.newwin(self.height, self.width, self.start_y, self.start_x)
         self.window.keypad(True)
 
     def display(self):
-        self.window.clear()  # Clear the window before displaying the menu
+        self.window.clear()
 
         if self.title:
-            self.window.addstr(self.title, curses.A_VERTICAL)
-            self.window.hline(curses.ACS_HLINE, self.width - 1)
+            self.window.addstr(self.title)
+
         if self.content:
             self.window.addstr(self.content)
 
-        y, x = self.window.getyx()
+        y, _ = self.window.getyx()
 
         for idx, option in enumerate(self.options):
+            y_pos = idx + y + 1
+            x_pos = 1
             if idx == self.select:
-                self.window.addstr(idx + y + 1, 1, option, curses.A_REVERSE)  # noqa: E701
+                self.window.addstr(y_pos, x_pos, option, curses.A_REVERSE)
             else:
-                self.window.addstr(idx + y + 1, 1, option)  # noqa: E701
+                self.window.addstr(y_pos, x_pos, option)
 
         self.window.refresh()
 
-    def navigate(self):
+    def navigate(self) -> int:
+        """Block until a selection is made. Returns selected index."""
         length = len(self.options)
         while True:
             key = self.window.getch()
@@ -51,12 +65,10 @@ class Menu:
                 self.select = (self.select - 1) % length
             elif key == curses.KEY_DOWN:
                 self.select = (self.select + 1) % length
-            elif key in [10, 13, 32, curses.KEY_ENTER]:
+            elif key in (10, 13, 32, curses.KEY_ENTER):
                 return self.select
-            elif ord('0') <= key <= ord('9'):
-                index = key - ord('0') - 1
+            elif ord("0") <= key <= ord("9"):
+                index = key - ord("0") - 1
                 if 0 <= index < length:
                     self.select = index
             self.display()
-
-
