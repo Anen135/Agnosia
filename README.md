@@ -2,9 +2,9 @@
 
 # A G N O S I A
 
-**Лабиринт. Терминал. Никакого проводника.**
+**A labyrinth. A terminal. No guide.**
 
-`PYTHON 3.10+` · `CURSES` · `ASCII` · `В РАЗРАБОТКЕ`
+`PYTHON 3.10+` · `CURSES` · `ASCII` · `IN DEVELOPMENT`
 
 ```text
 #############################
@@ -16,39 +16,39 @@
 #############################
 ```
 
-*Мир дан. Остальное придётся выяснить.*
+*You are given a world. The rest is yours to discover.*
 
 </div>
 
 ---
 
-## По ту сторону приглашения
+## Beyond the prompt
 
-**Agnosia** — пошаговая игра о побеге из лабиринта, живущая в терминале. Здесь есть стены, проходы, несколько предметов и команды. Из этих обрывков нужно собрать представление о месте, в котором ты оказался.
+**Agnosia** is a turn-based maze escape game that lives in your terminal. There are walls, passages, a handful of items, and commands. From these fragments, you must piece together a sense of the place you have entered.
 
-Её эстетика выросла из консольных игр 70-х: скупых, враждебных, самобытных — и при этом с душой. Чёрный экран, текст, ASCII и тишина между решениями. Интерфейс не старается расположить к себе. Мир не останавливается, чтобы объяснить собственное устройство.
+Its aesthetic draws on the terminal games of the 1970s: sparse, hostile, idiosyncratic, yet full of soul. A black screen, text, ASCII, and the silence between decisions. The interface makes no effort to charm you. The world does not pause to explain itself.
 
-Игрока не ведут за руку. Ему дают пространство и возможность его изучить: проверить догадку, запомнить поворот, ошибиться, вернуться. Карта не обязана отвечать на вопрос «где я?». Предмет не обязан раскрывать всё, что хотелось бы знать. Понимание здесь появляется из опыта.
+There is no hand-holding. You are given a space and the freedom to explore it: test a hunch, remember a turn, make a mistake, find your way back. A map does not have to answer “where am I?” An item does not have to reveal everything you want to know. Understanding comes through experience.
 
-**Стабильность — требование к коду. Неясность — часть замысла.** Ошибка программы не должна обрывать исследование; отсутствие подсказки вполне может быть его началом.
+**Stability is a requirement for the code. Obscurity is part of the design.** A software error should never cut an exploration short; the absence of a hint may be where one begins.
 
-## Что уже живёт в лабиринте
+## What lives in the labyrinth
 
-- Генерируемые лабиринты и уровни, описанные в JSON.
-- Движение относительно собственного направления: вперёд, разворот, влево, вправо.
-- Конечный запас карт, компасов, сканеров и локаторов.
-- Карта без отметки текущего положения — только структура пространства.
-- Обучающий уровень и следующий за ним лабиринт, в котором ты уже не один.
+- Generated mazes and levels defined in JSON.
+- Movement relative to your facing direction: forward, turn around, left, right.
+- A limited supply of maps, compasses, scanners, and locators.
+- A map with no marker for your position: only the shape of the space.
+- A tutorial level, followed by a labyrinth where you are no longer alone.
 
-Там кто-то бродит. Он глух и слеп. Он не знает, где ты. Иногда этого достаточно.
+Something wanders there. It is deaf and blind. It does not know where you are. Sometimes that is enough.
 
-Проект находится в разработке: механики и баланс ещё меняются. Самобытность, сдержанность и исследование без проводника остаются его основой.
+The project is in development: mechanics and balance are still changing. Its distinct character, restraint, and exploration without a guide remain at its core.
 
-> Эта страница описывает текущую рабочую версию. Обновления инвентаря, консоль разработчика и монстр пока находятся в локальной разработке и ещё не опубликованы в `main` на GitHub.
+> This page describes the current working version. Inventory updates, the developer console, and the monster are still in local development and have not yet been published to `main` on GitHub.
 
-## Войти
+## Enter
 
-Нужны **Python 3.10+** и обычный интерактивный терминал. На Windows подойдут PowerShell и Windows Terminal.
+You need **Python 3.10+** and an interactive terminal. On Windows, PowerShell and Windows Terminal will do.
 
 ```powershell
 git clone https://github.com/Anen135/Agnosia.git
@@ -61,7 +61,7 @@ python -m venv venv
 <details>
 <summary>Linux / macOS</summary>
 
-Нужна сборка Python с поддержкой `curses`. Воспроизведение звука доступно только на Windows.
+Your Python installation must include `curses` support. Audio playback is available on Windows only.
 
 ```sh
 git clone https://github.com/Anen135/Agnosia.git
@@ -74,77 +74,77 @@ python3 -m venv venv
 </details>
 
 <details>
-<summary>Клавиши</summary>
+<summary>Controls</summary>
 
-| Где | Действие | Клавиши |
+| Where | Action | Keys |
 | --- | --- | --- |
-| Меню | Выбрать пункт | ↑ / ↓ или номер пункта |
-| Меню | Подтвердить | Enter или пробел |
-| Меню | Вернуться; в главном меню — выйти | Esc или `q` |
-| Карта | Прокрутить | Стрелки |
-| Карта | Закрыть | Esc или `q` |
+| Menus | Select an option | ↑ / ↓ or the option number |
+| Menus | Confirm | Enter or Space |
+| Menus | Go back; quit from the main menu | Esc or `q` |
+| Map | Scroll | Arrow keys |
+| Map | Close | Esc or `q` |
 
-`BACK` в меню движения означает разворот. Открытие карты расходует один предмет; прокрутка не расходует дополнительные карты.
+`BACK` in the movement menu means turn around. Opening a map consumes one item; scrolling does not consume additional maps.
 
 </details>
 
-## За экраном
+## Behind the screen
 
-Подробности ниже раскрывают механику. Для первого знакомства они не обязательны.
+The details below reveal game mechanics. You do not need them for your first visit.
 
 <details>
-<summary>Консоль разработчика</summary>
+<summary>Developer console</summary>
 
-Открывается из меню клавишей **`~` / обратная кавычка** или **F12**. Закрывается той же клавишей либо **Esc**. Команды выполняются по Enter.
+Open it from a menu with the **tilde / backtick key** or **F12**. Close it with the same key or **Esc**. Press Enter to execute a command.
 
-| Команда | Действие |
+| Command | Action |
 | --- | --- |
-| `help` | Список команд |
-| `give maps 5` | Добавить пять карт |
-| `give compasses 2` | Добавить два компаса |
-| `give scanners 3` | Добавить три сканера |
-| `give locators` | Добавить один локатор |
-| `give all 10` | Добавить по десять предметов каждого типа |
-| `mapmode on` | Включить живую карту справа |
-| `mapmode off` | Выключить живую карту |
-| `mapmode` | Переключить режим карты |
+| `help` | List commands |
+| `give maps 5` | Add five maps |
+| `give compasses 2` | Add two compasses |
+| `give scanners 3` | Add three scanners |
+| `give locators` | Add one locator |
+| `give all 10` | Add ten of each item |
+| `mapmode on` | Show the live map on the right |
+| `mapmode off` | Hide the live map |
+| `mapmode` | Toggle map mode |
 
-Выдача предметов работает после начала уровня и относится к текущей попытке. Количество — целое число от 1 до 10000, по умолчанию 1.
+Items can be granted after a level starts and belong to the current run. The count must be an integer from 1 to 10000; the default is 1.
 
-В `mapmode` игрок обозначен `@`, монстр — `M`. Большая карта следует за игроком. Этот режим не расходует предметы и сохраняет настройку до выключения или выхода из приложения. Консоль и экраны предметов временно заменяют игровой вид. При ширине терминала меньше восьми столбцов боковая карта скрывается.
-
-</details>
-
-<details>
-<summary>Уровни и поведение монстра</summary>
-
-Уровни находятся в [`levels/`](levels/). Размеры лабиринта должны быть нечётными целыми числами от 3 до 501. В JSON поле `monster` принимает `null` или `"wanderer"`.
-
-В обучающем уровне монстра нет. На следующем он появляется в случайном проходе, вне стартовой клетки и выхода. После `GO`, `BACK`, `LEFT` или `RIGHT` монстр выбирает случайную соседнюю проходимую клетку. Попытка пройти в стену тоже даёт ему ход. Работа с меню и инвентарём — нет.
-
-У монстра нет восприятия, поиска пути к игроку или преследования. Совпадение клеток завершает попытку: проверяется и шаг игрока на монстра, и шаг монстра на игрока. Новая попытка создаёт монстра заново. После побега следующий уровень выбирается для следующего `START`.
-
-Обычная карта не показывает ни игрока, ни монстра.
+In `mapmode`, `@` marks the player and `M` marks the monster. Large maps scroll to follow the player. This mode consumes no items and stays enabled until switched off or the application exits. The console and item screens temporarily replace the gameplay view. The sidebar is hidden when the terminal is narrower than eight columns.
 
 </details>
 
 <details>
-<summary>Проверки и диагностика</summary>
+<summary>Levels and monster behavior</summary>
 
-Из корня проекта, в окружении с установленными зависимостями:
+Levels live in [`levels/`](levels/). Maze dimensions must be odd integers from 3 to 501. The JSON field `monster` accepts `null` or `"wanderer"`.
+
+The tutorial has no monster. In the next level, it spawns in a random passage, away from the starting cell and the exit. After `GO`, `BACK`, `LEFT`, or `RIGHT`, it chooses a random adjacent walkable cell. Trying to walk into a wall also gives it a turn. Navigating menus and using the inventory do not.
+
+The monster has no perception, pathfinding toward the player, or pursuit behavior. Sharing a cell ends the run: both the player stepping onto the monster and the monster stepping onto the player are checked. A new run spawns the monster anew. After an escape, the next level is selected for the next `START`.
+
+The ordinary map shows neither the player nor the monster.
+
+</details>
+
+<details>
+<summary>Tests and diagnostics</summary>
+
+From the project root, using an environment with the dependencies installed:
 
 ```sh
 python -m unittest discover
 ```
 
-Регрессионные тесты проверяют инвентарь, карты, размеры терминала, команды консоли, загрузку уровней, перемещение и столкновения с монстром.
+Regression tests cover inventory, maps, terminal dimensions, console commands, level loading, movement, and monster collisions.
 
-Повреждённые уровни пропускаются. Если подходящих уровней нет, загружается резервный. Недоступный звук не останавливает игру. Непредвиденные ошибки записываются в журнал с ротацией:
+Invalid levels are skipped. If no valid levels remain, a fallback level is loaded. Unavailable audio does not stop the game. Unexpected errors are written to a rotating log:
 
 - Windows: `%LOCALAPPDATA%\Agnosia\agnosia.log`
 - Linux / macOS: `~/Agnosia/agnosia.log`
 
-Для сообщения об ошибке пригодятся последовательность действий, версия Python, терминал и соответствующий фрагмент журнала.
+When reporting a bug, include the steps to reproduce it, your Python version, your terminal, and the relevant log excerpt.
 
 </details>
 
@@ -152,6 +152,6 @@ python -m unittest discover
 
 <div align="center">
 
-*Лабиринт ничего не обещал.*
+*The labyrinth never promised you anything.*
 
 </div>
