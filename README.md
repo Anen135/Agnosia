@@ -154,4 +154,8 @@ When reporting a bug, include the steps to reproduce it, your Python version, yo
 
 *The labyrinth never promised you anything.*
 
+<<<<<<< HEAD
 </div>
+=======
+</div>
+>>>>>>> 6f4c1e0c420048345e711eccc3217512c75ab3bf
