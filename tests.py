@@ -226,6 +226,7 @@ class MenuTests(unittest.TestCase):
         self.addCleanup(self.patcher_newwin.stop)
         self.mock_stdscr = MagicMock()
         self.mock_stdscr.getyx.return_value = (0, 0)
+        self.mock_stdscr.getmaxyx.return_value = (30, 120)
 
     def _make_mock_window(self, key_sequence):
         mq = list(key_sequence)
@@ -237,6 +238,7 @@ class MenuTests(unittest.TestCase):
         w.refresh = MagicMock()
         w.hline = MagicMock()
         w.getyx.return_value = (0, 0)
+        w.getmaxyx.return_value = (30, 120)
         return w
 
     def test_navigate_selects_on_enter(self):
@@ -247,7 +249,7 @@ class MenuTests(unittest.TestCase):
         self.assertEqual(choice, 1)
 
     def test_navigate_selects_on_digit(self):
-        w = self._make_mock_window([ord("2")])
+        w = self._make_mock_window([ord("2"), 10])
         self.mock_newwin.return_value = w
         menu = Menu(["A", "B", "C"], stdscr=self.mock_stdscr)
         choice = menu.navigate()
@@ -279,6 +281,19 @@ class MenuTests(unittest.TestCase):
         w.clear.assert_called_once()
         w.addstr.assert_called()
         w.refresh.assert_called_once()
+
+    def test_main_menu_fits_banner_and_options(self):
+        from game import Game
+
+        banner = Game._title_banner(None)
+        menu = Menu(
+            ["START", "OPTIONS", "LEVELS", "QUIT"],
+            content=banner,
+            stdscr=self.mock_stdscr,
+        )
+        self.assertGreater(menu.width, max(map(len, banner.split("\n"))))
+        last_option_row = banner.count("\n") + len(menu.options)
+        self.assertGreater(menu.height, last_option_row)
 
 
 class NumpyMazeTests(unittest.TestCase):

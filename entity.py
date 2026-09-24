@@ -1,3 +1,6 @@
+import random
+
+
 class Entity:
     """Base entity with position and direction."""
 
@@ -64,3 +67,30 @@ class Player(Entity):
             "locators": 2,
         }
         self.steps = 0
+
+
+class Wanderer(Entity):
+    """A random walker with no knowledge of the player."""
+
+    def __init__(self, position):
+        super().__init__(position)
+        self.sign = "M"
+
+    @classmethod
+    def spawn(cls, maze):
+        cells = [
+            [row, col]
+            for row in range(maze.rows)
+            for col in range(maze.cols)
+            if maze.maze[row][col] == maze.config["path"]
+        ]
+        return cls(random.choice(cells)) if cells else None
+
+    def wander(self, maze):
+        if neighbors := [
+            [self.position[0] + dr, self.position[1] + dc]
+            for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1))
+            if 0 <= self.position[0] + dr < maze.rows
+            and 0 <= self.position[1] + dc < maze.cols
+            and maze.maze[self.position[0] + dr][self.position[1] + dc] != maze.config["wall"]
+        ]: self.position = random.choice(neighbors)

@@ -4,11 +4,17 @@ from config import DEFAULT_CONFIG
 
 class Maze:
     def __init__(self, rows: int, cols: int, config=None):
+        if any(type(n) is not int or not 3 <= n <= 501 or n % 2 == 0 for n in (rows, cols)):
+            raise ValueError("Maze dimensions must be odd integers between 3 and 501")
         if config is None:
             config = dict(DEFAULT_CONFIG)
+        if (not isinstance(config, dict) or set(DEFAULT_CONFIG) - config.keys()
+                or any(not isinstance(config[k], str) or len(config[k]) != 1 for k in DEFAULT_CONFIG)
+                or len({config[k] for k in DEFAULT_CONFIG}) != len(DEFAULT_CONFIG)):
+            raise ValueError("Maze symbols must be distinct single characters")
         self.rows = rows
         self.cols = cols
-        self.config = config
+        self.config = dict(config)
         self.maze = self._generate(rows, cols)
 
     def _generate(self, rows: int, cols: int):
@@ -45,7 +51,9 @@ class Maze:
         return [row[:] for row in self.maze]
 
     def is_end(self, position):
-        return self.maze[position[0]][position[1]] == self.config["end"]
+        row, col = position
+        return (0 <= row < self.rows and 0 <= col < self.cols
+                and self.maze[row][col] == self.config["end"])
 
     def display(self):
         for row in self.maze:

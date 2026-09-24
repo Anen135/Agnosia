@@ -1,5 +1,6 @@
 import curses
 from config import BASEDIR
+from terminal import write
 
 
 def draw_title(stdscr: curses.window):
@@ -13,7 +14,8 @@ def draw_title(stdscr: curses.window):
         "+#+     #+# #+#    #+# #+#   #+#+# #+#    #+# #+#    #+#    #+#     #+#     #+# \n"
         "###     ###  ########  ###    ####  ########   ######## ########### ###     ### "
     )
-    stdscr.addstr(title)
+    for y, line in enumerate(title.splitlines()):
+        write(stdscr, y, 0, line)
 
 
 def draw_game_map(
@@ -41,48 +43,59 @@ def draw_game_map(
         content += "\n" + message
 
     h, w = stdscr.getmaxyx()
-    menu_w = max(len(content), 30)
+    menu_w = max(1, min(w, max(len(content), 30)))
+    menu_h = max(1, min(h, 5))
     menu_x = max(0, (w - menu_w) // 2)
-    menu_y = max(0, (h - 5) // 2)
+    menu_y = max(0, (h - menu_h) // 2)
 
-    win = curses.newwin(5, menu_w, menu_y, menu_x)
+    win = curses.newwin(menu_h, menu_w, menu_y, menu_x)
     win.clear()
-    win.addstr(0, 0, content[:menu_w - 1])
+    for y, line in enumerate(content.splitlines()):
+        write(win, y, 0, line)
     win.refresh()
 
     if timelimit != 0:
         info_x = w - 50
-        if info_x > 0:
+        if info_x > 0 and h >= 23:
             panel = curses.newwin(23, 50, 0, info_x)
             panel.box()
             panel.refresh()
 
 
 def draw_map_panel(stdscr: curses.window, maze, player_pos, config, scroll_start):
-    """Render the scrollable map overlay for the map item."""
+    """Draw a clipped viewport without mutating the maze or its NumPy views."""
     h, w = stdscr.getmaxyx()
-    panel_x = max(0, w - 50)
-    panel_y = 0
-    panel = curses.newwin(23, 50, panel_y, panel_x)
+    stdscr.keypad(True)
+    stdscr.nodelay(False)
+    scroll_h = max(1, h - 2)
+    scroll_w = max(1, w - 1)
+    max_y = max(0, len(maze) - scroll_h)
+    max_x = max(0, len(maze[0]) - scroll_w)
+    sy = max(0, min(scroll_start[0], max_y))
+    sx = max(0, min(scroll_start[1], max_x))
+    stdscr.clear()
+    for y in range(sy, min(len(maze), sy + scroll_h)):
+        row = []
+        for x in range(sx, min(len(maze[y]), sx + scroll_w)):
+            row.append(str(maze[y][x]))
+        write(stdscr, y - sy + 1, 0, "".join(row))
+    stdscr.refresh()
+    return stdscr, (max_y, max_x)
 
-    scroll_h = 10
-    scroll_w = 20
-    max_scroll_y = max(0, len(maze) - scroll_h)
-    max_scroll_x = max(0, len(maze[0]) - scroll_w)
 
-    sy, sx = scroll_start
-    panel.clear()
-    buffer = maze[sy:sy + scroll_h, sx:sx + scroll_w]
-    buffer[player_pos[0] - sy][player_pos[1] - sx] = "O"
-
-    panel.addstr(0, 0, f"Scroll: {sy} {sx} {max_scroll_y} {max_scroll_x}  (q to exit)")
-
-    for y, row in enumerate(buffer):
-        for x, cell in enumerate(row):
-            if cell in (config["start"], config["end"]):
-                panel.addch(y + 1, x + 2, cell, curses.color_pair(1))
-            else:
-                panel.addch(y + 1, x + 2, cell)
-
-    panel.refresh()
-    return panel, (max_scroll_y, max_scroll_x)
+def draw_live_map(window, maze, player_pos, monster_pos=None):
+    """Read-only sidebar viewport that follows the player."""
+    height, width = window.getmaxyx()
+    window.clear()
+    rows, cols = max(1, height - 1), max(1, width - 1)
+    sy = max(0, min(player_pos[0] - rows // 2, len(maze) - rows))
+    sx = max(0, min(player_pos[1] - cols // 2, len(maze[0]) - cols))
+    for y in range(sy, min(len(maze), sy + rows)):
+        text = "".join(
+            "@" if (y, x) == tuple(player_pos)
+            else "M" if monster_pos is not None and (y, x) == tuple(monster_pos)
+            else str(maze[y][x])
+            for x in range(sx, min(len(maze[y]), sx + cols))
+        )
+        write(window, y - sy + (1 if height > 1 else 0), 0, text)
+    window.refresh()

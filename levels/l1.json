@@ -5,7 +5,7 @@
         "rows": 11,
         "cols": 21
     },
-    "monster": null,
+    "monster": "wanderer",
     "dificulty": 0,
     "timelimit": 50
 }
